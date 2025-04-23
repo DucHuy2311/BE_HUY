@@ -1,11 +1,11 @@
 const pool = require("../config/database");
 
 class Menu {
-  static async create({ name, price, category }) {
+  static async create({ name, price, sale_price, category }) {
     try {
       const [result] = await pool.query(
-        "INSERT INTO Menu (name, price, category) VALUES (?, ?, ?)",
-        [name, price, category]
+        "INSERT INTO Menu (name, price, category) VALUES (?, ?, ?, ?)",
+        [name, price, sale_price, category]
       );
       return result.insertId;
     } catch (error) {
@@ -36,11 +36,11 @@ class Menu {
     }
   }
 
-  static async update(menuId, { name, price, category }) {
+  static async update(menuId, { name, price, sale_price, category }) {
     try {
       const [result] = await pool.query(
-        "UPDATE Menu SET name = ?, price = ?, category = ? WHERE menu_id = ?",
-        [name, price, category, menuId]
+        "UPDATE Menu SET name = ?, price = ?,sale_price = ?, category = ? WHERE menu_id = ?",
+        [name, price, sale_price, category, menuId]
       );
       return result.affectedRows;
     } catch (error) {

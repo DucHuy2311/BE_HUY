@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Grill Restaurant - Authentication</title>
+    <meta name="title" content="Grill Restaurant - Authentication" />
+    <meta name="description" content="Login or Register for Grill Restaurant" />
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml" />
+
+    <!-- google font link-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- custom css link-->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/auth.css" />
+
+    <!-- ionicons -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <style>
+      /* Add background image to the auth container */
+      .auth-container {
+        background-image: url("./assets/images/Top-dia-diem-du-lich-phap-nhat-dinh-phai-den-mot-lan-trong-doi-eurocircle-ofotravel.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+      }
+
+      /* Add overlay to improve readability */
+      .auth-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1;
+      }
+
+      /* Ensure content is above the overlay */
+      .auth-wrapper {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Style for error/success message */
+      .message {
+        color: var(--gold-crayola);
+        text-align: center;
+        margin-top: 15px;
+        font-size: 1.4rem;
+        display: none;
+      }
+      .message.success {
+        color: var(--white);
+        display: block;
+      }
+      .message.error {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="auth-container">
+      <div class="auth-wrapper">
+        <div class="auth-left">
+          <h2 class="welcome-text">WELCOME BACK</h2>
+          <div class="separator"></div>
+
+          <!-- Login Form (visible by default) -->
+          <div id="login-form" class="auth-form active">
+            <h1 class="display-1 auth-title">Sign In</h1>
+
+            <div class="tab-navigation">
+              <button class="tab-btn active" data-tab="login">LOGIN</button>
+              <button class="tab-btn" data-tab="register">REGISTER</button>
+            </div>
+
+            <form id="loginForm" method="POST">
+              <div class="input-group">
+                <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="input-group">
+                <ion-icon
+                  name="lock-closed-outline"
+                  aria-hidden="true"
+                ></ion-icon>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="remember-forgot">
+                <label class="remember-me">
+                  <input type="checkbox" name="remember" />
+                  <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-link">Forgot Password?</a>
+              </div>
+
+              <button type="submit" class="btn btn-secondary btn-auth">
+                <span class="text text-1">SIGN IN</span>
+                <span class="text text-2" aria-hidden="true">SIGN IN</span>
+              </button>
+              <div class="message" id="login-message"></div>
+            </form>
+
+            <p class="auth-redirect">
+              Don't have an account?
+              <a href="#" class="switch-form" data-form="register"
+                >Register now</a
+              >
+            </p>
+          </div>
+
+          <!-- Register Form (hidden by default) -->
+          <div id="register-form" class="auth-form">
+            <h1 class="display-1 auth-title">Create Account</h1>
+
+            <div class="tab-navigation">
+              <button class="tab-btn" data-tab="login">LOGIN</button>
+              <button class="tab-btn active" data-tab="register">
+                REGISTER
+              </button>
+            </div>
+
+            <form id="registerForm" method="POST">
+              <div class="input-group">
+                <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+                <input
+                  type="text"
+                  name="fullname"
+                  placeholder="Full Name"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="input-group">
+                <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="input-group">
+                <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="input-group">
+                <ion-icon
+                  name="lock-closed-outline"
+                  aria-hidden="true"
+                ></ion-icon>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  class="auth-input"
+                />
+              </div>
+
+              <div class="terms-agreement">
+                <label>
+                  <input type="checkbox" name="terms" required />
+                  <span
+                    >I agree to the Terms of Service and Privacy Policy</span
+                  >
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-secondary btn-auth">
+                <span class="text text-1">CREATE ACCOUNT</span>
+                <span class="text text-2" aria-hidden="true"
+                  >CREATE ACCOUNT</span
+                >
+              </button>
+              <div class="message" id="register-message"></div>
+            </form>
+
+            <p class="auth-redirect">
+              Already have an account?
+              <a href="#" class="switch-form" data-form="login">Sign in</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="auth-right">
+          <div class="logo-container">
+            <img
+              src="./assets/images/logo.svg"
+              alt="Grill Restaurant"
+              class="auth-logo"
+            />
+          </div>
+
+          <h2 class="headline-1">Grill Restaurant</h2>
+
+          <p class="auth-description">
+            Experience the finest dining with our exquisite menu and impeccable
+            service. Create an account to make reservations and enjoy exclusive
+            benefits.
+          </p>
+
+          <div class="auth-info">
+            <h3 class="visit-text">VISIT US</h3>
+            <p class="address">Restaurant ST, Delicious City, London, UK</p>
+
+            <div class="separator"></div>
+
+            <h3 class="booking-text">BOOKING REQUEST</h3>
+            <a href="tel:+88-123-123456" class="booking-number"
+              >+88-123-123456</a
+            >
+          </div>
+
+          <div class="navigation-dots">
+            <button class="nav-dot active"></button>
+            <button class="nav-dot"></button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Kiểm tra nếu đã đăng nhập
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+        if (token && role) {
+          if (role === "admin") {
+            window.location.href = "admin-dashboard.html";
+          } else {
+            window.location.href = "reservation.html";
+          }
+        }
+
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        const switchLinks = document.querySelectorAll(".switch-form");
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const navDots = document.querySelectorAll(".nav-dot");
+
+        // Handle form switching via links
+        switchLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const formToShow = this.getAttribute("data-form");
+
+            if (formToShow === "login") {
+              loginForm.classList.add("active");
+              registerForm.classList.remove("active");
+              updateTabButtons("login");
+              updateNavDots(0);
+            } else {
+              registerForm.classList.add("active");
+              loginForm.classList.remove("active");
+              updateTabButtons("register");
+              updateNavDots(1);
+            }
+          });
+        });
+
+        // Handle form switching via tab buttons
+        tabBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const tab = this.getAttribute("data-tab");
+
+            if (tab === "login") {
+              loginForm.classList.add("active");
+              registerForm.classList.remove("active");
+              updateNavDots(0);
+            } else {
+              registerForm.classList.add("active");
+              loginForm.classList.remove("active");
+              updateNavDots(1);
+            }
+
+            updateTabButtons(tab);
+          });
+        });
+
+        // Handle navigation dots
+        navDots.forEach((dot, index) => {
+          dot.addEventListener("click", function () {
+            if (index === 0) {
+              loginForm.classList.add("active");
+              registerForm.classList.remove("active");
+              updateTabButtons("login");
+            } else {
+              registerForm.classList.add("active");
+              loginForm.classList.remove("active");
+              updateTabButtons("register");
+            }
+            updateNavDots(index);
+          });
+        });
+
+        // Update active state of tab buttons
+        function updateTabButtons(activeTab) {
+          tabBtns.forEach((btn) => {
+            if (btn.getAttribute("data-tab") === activeTab) {
+              btn.classList.add("active");
+            } else {
+              btn.classList.remove("active");
+            }
+          });
+        }
+
+        // Update active state of navigation dots
+        function updateNavDots(activeIndex) {
+          navDots.forEach((dot, index) => {
+            if (index === activeIndex) {
+              dot.classList.add("active");
+            } else {
+              dot.classList.remove("active");
+            }
+          });
+        }
+
+        // Add link to main page in the logo
+        const logoContainer = document.querySelector(".logo-container");
+        logoContainer.addEventListener("click", function () {
+          window.location.href = "index.html";
+        });
+
+        // Handle registration form submission
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const formData = {
+              username: document
+                .querySelector('#registerForm [name="email"]')
+                .value.split("@")[0],
+              password: document.querySelector(
+                '#registerForm [name="password"]'
+              ).value,
+              email: document.querySelector('#registerForm [name="email"]')
+                .value,
+              full_name: document.querySelector(
+                '#registerForm [name="fullname"]'
+              ).value,
+              phone: document.querySelector('#registerForm [name="phone"]')
+                .value,
+              role: "customer",
+            };
+
+            const messageDiv = document.getElementById("register-message");
+            try {
+              const response = await fetch(
+                "http://localhost:3000/api/auth/register",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(formData),
+                }
+              );
+
+              const result = await response.json();
+              if (response.ok) {
+                messageDiv.textContent =
+                  "Registration successful! Please sign in.";
+                messageDiv.classList.remove("error");
+                messageDiv.classList.add("success");
+                setTimeout(() => {
+                  loginForm.classList.add("active");
+                  registerForm.classList.remove("active");
+                  updateTabButtons("login");
+                  updateNavDots(0);
+                  messageDiv.textContent = "";
+                  messageDiv.classList.remove("success");
+                }, 2000);
+              } else {
+                messageDiv.textContent = result.message || "An error occurred!";
+                messageDiv.classList.remove("success");
+                messageDiv.classList.add("error");
+              }
+            } catch (error) {
+              messageDiv.textContent = "An error occurred!";
+              messageDiv.classList.remove("success");
+              messageDiv.classList.add("error");
+              console.error("Error:", error);
+            }
+          });
+
+        // Handle login form submission
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const formData = {
+              username: document.querySelector('#loginForm [name="email"]')
+                .value,
+              password: document.querySelector('#loginForm [name="password"]')
+                .value,
+            };
+
+            const messageDiv = document.getElementById("login-message");
+            try {
+              const response = await fetch(
+                "http://localhost:3000/api/auth/login",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(formData),
+                }
+              );
+
+              const result = await response.json();
+              if (response.ok) {
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("role", result.role);
+                messageDiv.textContent = "Login successful!";
+                messageDiv.classList.remove("error");
+                messageDiv.classList.add("success");
+                setTimeout(() => {
+                  if (result.role === "admin") {
+                    window.location.href = "admin-dashboard.html";
+                  } else {
+                    window.location.href = "reservation.html";
+                  }
+                }, 2000);
+              } else {
+                messageDiv.textContent = result.message || "An error occurred!";
+                messageDiv.classList.remove("success");
+                messageDiv.classList.add("error");
+              }
+            } catch (error) {
+              messageDiv.textContent = "An error occurred!";
+              messageDiv.classList.remove("success");
+              messageDiv.classList.add("error");
+              console.error("Error:", error);
+            }
+          });
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'934d2c8d7d3e53da',t:'MTc0NTQwOTM0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

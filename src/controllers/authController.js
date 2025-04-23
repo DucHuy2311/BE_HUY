@@ -13,7 +13,7 @@ class AuthController {
         email,
         full_name,
         phone,
-        role: role || "customer", // Mặc định là customer
+        role: role || "customer",
       });
       res.status(201).json({ message: "User registered", userId });
     } catch (error) {
@@ -26,7 +26,7 @@ class AuthController {
   static async login(req, res) {
     try {
       const { username, password } = req.body;
-      const user = await User.findByUsername(username);
+      const user = await User.findByEmail(username); // Sửa: Tìm kiếm bằng email
       if (!user) return res.status(404).json({ message: "User not found" });
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -37,9 +37,7 @@ class AuthController {
       const token = jwt.sign(
         { userId: user.user_id, role: user.role },
         process.env.JWT_SECRET || "secret",
-        {
-          expiresIn: "1h",
-        }
+        { expiresIn: "1h" }
       );
       res.json({ message: "Login successful", token, role: user.role });
     } catch (error) {
