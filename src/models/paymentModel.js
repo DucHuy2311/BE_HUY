@@ -1,44 +1,45 @@
-const pool = require("../config/database");
+const mongoose = require("mongoose");
 
-class Payment {
-  static async create({ reservation_id, user_id, amount, payment_method }) {
-    try {
-      const [result] = await pool.query(
-        "INSERT INTO Payments (reservation_id, user_id, amount, payment_method) VALUES (?, ?, ?, ?)",
-        [reservation_id, user_id, amount, payment_method]
-      );
-      return result.insertId;
-    } catch (error) {
-      console.error("Error creating payment:", error);
-      throw error;
+const paymentSchema = new mongoose.Schema(
+    {
+        reservation_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Reservation",
+            required: true,
+        },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        amount: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+        payment_method: {
+            type: String,
+            required: true,
+            enum: ["cash", "credit_card", "bank_transfer"],
+        },
+        payment_status: {
+            type: String,
+            default: "pending",
+            enum: ["pending", "completed", "failed", "refunded"],
+        },
+        transaction_id: {
+            type: String,
+        },
+        payment_date: {
+            type: Date,
+            default: Date.now,
+        },
+    },
+    {
+        timestamps: true,
     }
-  }
+);
 
-  static async updateStatus(paymentId, status) {
-    try {
-      const [result] = await pool.query(
-        "UPDATE Payments SET payment_status = ? WHERE payment_id = ?",
-        [status, paymentId]
-      );
-      return result.affectedRows;
-    } catch (error) {
-      console.error("Error updating payment status:", error);
-      throw error;
-    }
-  }
-
-  static async findByReservationId(reservationId) {
-    try {
-      const [rows] = await pool.query(
-        "SELECT * FROM Payments WHERE reservation_id = ?",
-        [reservationId]
-      );
-      return rows[0];
-    } catch (error) {
-      console.error("Error finding payment:", error);
-      throw error;
-    }
-  }
-}
+const Payment = mongoose.model("Payment", paymentSchema);
 
 module.exports = Payment;

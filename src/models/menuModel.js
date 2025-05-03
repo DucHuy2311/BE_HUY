@@ -1,65 +1,44 @@
-const pool = require("../config/database");
+const mongoose = require("mongoose");
 
-class Menu {
-  static async create({ name, price, sale_price, category }) {
-    try {
-      const [result] = await pool.query(
-        "INSERT INTO Menu (name, price, category) VALUES (?, ?, ?, ?)",
-        [name, price, sale_price, category]
-      );
-      return result.insertId;
-    } catch (error) {
-      console.error("Error creating menu item:", error);
-      throw error;
+const menuSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        price: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+        sale_price: {
+            type: Number,
+            min: 0,
+        },
+        category: {
+            type: String,
+            required: true,
+            enum: ["appetizer", "main_course", "dessert", "drink"],
+        },
+        description: {
+            type: String,
+            trim: true,
+        },
+        image: {
+            type: String,
+        },
+        status: {
+            type: String,
+            default: "available",
+            enum: ["available", "unavailable"],
+        },
+    },
+    {
+        timestamps: true,
     }
-  }
+);
 
-  static async findAll() {
-    try {
-      const [rows] = await pool.query("SELECT * FROM Menu");
-      return rows;
-    } catch (error) {
-      console.error("Error finding menu items:", error);
-      throw error;
-    }
-  }
-
-  static async findById(menuId) {
-    try {
-      const [rows] = await pool.query("SELECT * FROM Menu WHERE menu_id = ?", [
-        menuId,
-      ]);
-      return rows[0];
-    } catch (error) {
-      console.error("Error finding menu item:", error);
-      throw error;
-    }
-  }
-
-  static async update(menuId, { name, price, sale_price, category }) {
-    try {
-      const [result] = await pool.query(
-        "UPDATE Menu SET name = ?, price = ?,sale_price = ?, category = ? WHERE menu_id = ?",
-        [name, price, sale_price, category, menuId]
-      );
-      return result.affectedRows;
-    } catch (error) {
-      console.error("Error updating menu item:", error);
-      throw error;
-    }
-  }
-
-  static async delete(menuId) {
-    try {
-      const [result] = await pool.query("DELETE FROM Menu WHERE menu_id = ?", [
-        menuId,
-      ]);
-      return result.affectedRows;
-    } catch (error) {
-      console.error("Error deleting menu item:", error);
-      throw error;
-    }
-  }
-}
+const Menu = mongoose.model("Menu", menuSchema);
 
 module.exports = Menu;

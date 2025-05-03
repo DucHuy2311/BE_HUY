@@ -1,32 +1,27 @@
-const express = require('express');const router = express.Router();
-const { authenticateToken, authorizeRole } = require('../middleware/auth');
-const {
-    getAllUsers,    getUserById,
-    updateUser,    deleteUser,
-    changePassword,    getUserProfile
-} = require('../controllers/userController');
+const express = require("express");
+const router = express.Router();
+const userController = require("../controllers/userController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// Public routesrouter.get('/profile', authenticateToken, getUserProfile);
-// Protected routes - require authentication
+// Tất cả các routes đều cần xác thực
+router.use(authMiddleware);
 
-router.put('/change-password', authenticateToken, changePassword);
-router.put('/profile', authenticateToken, updateUser);
+// Lấy thông tin tất cả users (chỉ admin)
+router.get("/", userController.getAllUsers);
 
-// Admin only routes
-router.get('/', authenticateToken, authorizeRole(['admin']), getAllUsers);
-router.get('/:id', authenticateToken, authorizeRole(['admin']), getUserById);
-router.delete('/:id', authenticateToken, authorizeRole(['admin']), deleteUser);
+// Lấy thông tin user theo ID
+router.get("/:id", userController.getUserById);
+
+// Cập nhật thông tin user
+router.put("/profile", userController.updateUser);
+
+// Xóa user
+router.delete("/:id", userController.deleteUser);
+
+// Đổi mật khẩu
+router.put("/change-password", userController.changePassword);
+
+// Lấy thông tin profile của user hiện tại
+router.get("/profile/me", userController.getUserProfile);
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-

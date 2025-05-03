@@ -1,41 +1,44 @@
-const pool = require("../config/database");
+const mongoose = require("mongoose");
 
-class Table {
-  static async findAll() {
-    try {
-      const [rows] = await pool.query("SELECT * FROM Tables");
-      return rows;
-    } catch (error) {
-      console.error("Error finding tables:", error);
-      throw error;
+const tableSchema = new mongoose.Schema(
+    {
+        table_number: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        capacity: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 20,
+        },
+        status: {
+            type: String,
+            default: "available",
+            enum: ["available", "occupied", "reserved", "maintenance"],
+        },
+        location: {
+            type: String,
+            required: true,
+            enum: ["indoor", "outdoor", "vip_room"],
+        },
+        description: {
+            type: String,
+            trim: true,
+        },
+        features: [
+            {
+                type: String,
+                enum: ["window_view", "private_room", "smoking_area", "wheelchair_accessible"],
+            },
+        ],
+    },
+    {
+        timestamps: true,
     }
-  }
+);
 
-  static async findById(tableId) {
-    try {
-      const [rows] = await pool.query(
-        "SELECT * FROM Tables WHERE table_id = ?",
-        [tableId]
-      );
-      return rows[0];
-    } catch (error) {
-      console.error("Error finding table:", error);
-      throw error;
-    }
-  }
-
-  static async updateStatus(tableId, status) {
-    try {
-      const [result] = await pool.query(
-        "UPDATE Tables SET status = ? WHERE table_id = ?",
-        [status, tableId]
-      );
-      return result.affectedRows;
-    } catch (error) {
-      console.error("Error updating table status:", error);
-      throw error;
-    }
-  }
-}
+const Table = mongoose.model("Table", tableSchema);
 
 module.exports = Table;
