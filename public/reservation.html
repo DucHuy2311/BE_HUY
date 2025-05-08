@@ -1,233 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restaurant Table Reservation</title>
-    <meta name="title" content="Restaurant France - Table Reservation" />
-    <meta name="description" content="Restaurant table reservation system" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Table Reservation</title>
+  <meta name="title" content="Restaurant France - Table Reservation" />
+  <meta name="description" content="Restaurant table reservation system" />
 
-    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/assets/css/restaurant-styles.css" />
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml" />
 
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-    ></script>
-  </head>
-  <body>
-    <header class="header">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/restaurant-styles.css" />
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo-container">
+        <a href="/index.html">
+          <img src="./assets/images/logo.svg" alt="Grill Restaurant" class="auth-logo" />
+        </a>
+      </div>
+      <h1 class="title">Restaurant Table Reservation</h1>
+    </div>
+  </header>
+
+  <main>
+    <section class="reservation-section">
       <div class="container">
-        <div class="logo-container">
-          <a href="/index.html">
-            <img
-              src="./assets/images/logo.svg"
-              alt="Grill Restaurant"
-              class="auth-logo"
-            />
-          </a>
+        <p class="section-subtitle">Select Your Table</p>
+        <h2 class="section-title">Restaurant Floor Plan</h2>
+
+        <div class="search-bar">
+          <div class="form-group">
+            <label for="search-date">Date</label>
+            <input type="date" id="search-date" required />
+          </div>
+          <div class="form-group">
+            <label for="search-time">Time</label>
+            <input type="time" id="search-time" required />
+          </div>
+          <button id="searchTablesBtn" class="submit-btn">
+            Search Empty Tabels
+          </button>
         </div>
-        <h1 class="title">Restaurant Table Reservation</h1>
+
+        <div class="restaurant-map">
+          <div class="floor-tabs">
+            <div class="tabs-list" id="floorTabs">
+              <button class="tab-btn active" data-floor="1">
+                Ground Floor
+              </button>
+              <button class="tab-btn" data-floor="2">First Floor</button>
+              <button class="tab-btn" data-floor="3">Second Floor</button>
+              <button class="tab-btn" data-floor="4">Third Floor</button>
+            </div>
+
+            <div class="tabs-content">
+              <div class="tab-content active" id="floor-1">
+                <div class="floor-info">
+                  <h3 class="floor-title">Ground Floor - Select a Table</h3>
+                  <p class="floor-description">
+                    Click on a table to make a reservation
+                  </p>
+                </div>
+                <div class="table-grid" id="tables-floor-1"></div>
+              </div>
+              <div class="tab-content" id="floor-2">
+                <div class="floor-info">
+                  <h3 class="floor-title">First Floor - Select a Table</h3>
+                  <p class="floor-description">
+                    Click on a table to make a reservation
+                  </p>
+                </div>
+                <div class="table-grid" id="tables-floor-2"></div>
+              </div>
+              <div class="tab-content" id="floor-3">
+                <div class="floor-info">
+                  <h3 class="floor-title">Second Floor - Select a Table</h3>
+                  <p class="floor-description">
+                    Click on a table to make a reservation
+                  </p>
+                </div>
+                <div class="table-grid" id="tables-floor-3"></div>
+              </div>
+              <div class="tab-content" id="floor-4">
+                <div class="floor-info">
+                  <h3 class="floor-title">Third Floor - Select a Table</h3>
+                  <p class="floor-description">
+                    Click on a table to make a reservation
+                  </p>
+                </div>
+                <div class="table-grid" id="tables-floor-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </header>
+    </section>
+  </main>
 
-    <main>
-      <section class="reservation-section">
-        <div class="container">
-          <p class="section-subtitle">Select Your Table</p>
-          <h2 class="section-title">Restaurant Floor Plan</h2>
+  <!-- Reservation Form Modal -->
+  <div class="modal" id="reservationModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Reservation Details</h2>
+        <button class="close-btn" id="closeReservationModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-info" id="tableInfo">
+          <!-- Table info will be inserted here -->
+        </div>
 
-          <div class="search-bar">
+        <form id="reservationForm">
+          <div class="form-grid">
             <div class="form-group">
-              <label for="search-date">Date</label>
-              <input type="date" id="search-date" required />
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" required />
             </div>
+
             <div class="form-group">
-              <label for="search-time">Time</label>
-              <input type="time" id="search-time" required />
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" required />
             </div>
-            <button id="searchTablesBtn" class="submit-btn">
-              Search Empty Tabels
-            </button>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="guests">Number of Guests</label>
+              <input type="number" id="guests" name="guests" min="1" required />
+            </div>
+
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+
+            <div class="form-group">
+              <label for="time">Time</label>
+              <input type="time" id="time" name="time" required />
+            </div>
           </div>
 
-          <div class="restaurant-map">
-            <div class="floor-tabs">
-              <div class="tabs-list" id="floorTabs">
-                <button class="tab-btn active" data-floor="1">
-                  Ground Floor
-                </button>
-                <button class="tab-btn" data-floor="2">First Floor</button>
-                <button class="tab-btn" data-floor="3">Second Floor</button>
-                <button class="tab-btn" data-floor="4">Third Floor</button>
-              </div>
+          <div class="form-group">
+            <label for="notes">Special Requests</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+          </div>
 
-              <div class="tabs-content">
-                <div class="tab-content active" id="floor-1">
-                  <div class="floor-info">
-                    <h3 class="floor-title">Ground Floor - Select a Table</h3>
-                    <p class="floor-description">
-                      Click on a table to make a reservation
-                    </p>
-                  </div>
-                  <div class="table-grid" id="tables-floor-1"></div>
-                </div>
-                <div class="tab-content" id="floor-2">
-                  <div class="floor-info">
-                    <h3 class="floor-title">First Floor - Select a Table</h3>
-                    <p class="floor-description">
-                      Click on a table to make a reservation
-                    </p>
-                  </div>
-                  <div class="table-grid" id="tables-floor-2"></div>
-                </div>
-                <div class="tab-content" id="floor-3">
-                  <div class="floor-info">
-                    <h3 class="floor-title">Second Floor - Select a Table</h3>
-                    <p class="floor-description">
-                      Click on a table to make a reservation
-                    </p>
-                  </div>
-                  <div class="table-grid" id="tables-floor-3"></div>
-                </div>
-                <div class="tab-content" id="floor-4">
-                  <div class="floor-info">
-                    <h3 class="floor-title">Third Floor - Select a Table</h3>
-                    <p class="floor-description">
-                      Click on a table to make a reservation
-                    </p>
-                  </div>
-                  <div class="table-grid" id="tables-floor-4"></div>
-                </div>
-              </div>
-            </div>
+          <div class="deposit-info">
+            <h3>Deposit Information</h3>
+            <p>
+              A deposit of 30% is required to secure your reservation. This
+              amount will be deducted from your final bill.
+            </p>
+            <div class="deposit-amount">Deposit Amount: 200,000 VND</div>
+          </div>
+
+          <button type="submit" class="submit-btn">Proceed to Payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content payment-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Payment Details</h2>
+        <button class="close-btn" id="closePaymentModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="payment-info">
+          <p>Please transfer the deposit amount to secure your reservation</p>
+          <div class="payment-amount">200,000 VND</div>
+
+          <div class="qr-code">
+            <div class="qr-placeholder">QR Code</div>
+          </div>
+
+          <div class="bank-info">
+            <h3>Bank Information</h3>
+            <ul>
+              <li><span>Bank:</span> Techcombank</li>
+              <li><span>Account Name:</span> Restaurant Name</li>
+              <li><span>Account Number:</span> 19036789456</li>
+              <li>
+                <span>Reference:</span> <span id="paymentReference"></span>
+              </li>
+            </ul>
           </div>
         </div>
-      </section>
-    </main>
 
-    <!-- Reservation Form Modal -->
-    <div class="modal" id="reservationModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title">Reservation Details</h2>
-          <button class="close-btn" id="closeReservationModal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="table-info" id="tableInfo">
-            <!-- Table info will be inserted here -->
-          </div>
-
-          <form id="reservationForm">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" required />
-              </div>
-
-              <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" required />
-              </div>
-
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required />
-              </div>
-
-              <div class="form-group">
-                <label for="guests">Number of Guests</label>
-                <input
-                  type="number"
-                  id="guests"
-                  name="guests"
-                  min="1"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required />
-              </div>
-
-              <div class="form-group">
-                <label for="time">Time</label>
-                <input type="time" id="time" name="time" required />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="notes">Special Requests</label>
-              <textarea id="notes" name="notes" rows="3"></textarea>
-            </div>
-
-            <div class="deposit-info">
-              <h3>Deposit Information</h3>
-              <p>
-                A deposit of 30% is required to secure your reservation. This
-                amount will be deducted from your final bill.
-              </p>
-              <div class="deposit-amount">Deposit Amount: 200,000 VND</div>
-            </div>
-
-            <button type="submit" class="submit-btn">Proceed to Payment</button>
-          </form>
+        <div class="payment-actions">
+          <button class="submit-btn" id="completePayment">
+            I've Completed the Payment
+          </button>
+          <button class="cancel-btn" id="cancelPayment">Cancel</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
-      <div class="modal-content payment-content">
-        <div class="modal-header">
-          <h2 class="modal-title">Payment Details</h2>
-          <button class="close-btn" id="closePaymentModal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="payment-info">
-            <p>Please transfer the deposit amount to secure your reservation</p>
-            <div class="payment-amount">200,000 VND</div>
+  <script src="/assets/js/restaurant-script.js"></script>
+</body>
 
-            <div class="qr-code">
-              <div class="qr-placeholder">QR Code</div>
-            </div>
-
-            <div class="bank-info">
-              <h3>Bank Information</h3>
-              <ul>
-                <li><span>Bank:</span> Techcombank</li>
-                <li><span>Account Name:</span> Restaurant Name</li>
-                <li><span>Account Number:</span> 19036789456</li>
-                <li>
-                  <span>Reference:</span> <span id="paymentReference"></span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="payment-actions">
-            <button class="submit-btn" id="completePayment">
-              I've Completed the Payment
-            </button>
-            <button class="cancel-btn" id="cancelPayment">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="/assets/js/restaurant-script.js"></script>
-  </body>
 </html>

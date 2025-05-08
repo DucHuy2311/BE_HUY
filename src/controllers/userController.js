@@ -3,7 +3,9 @@ const User = require("../models/userModel");
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select("-password");
+        const users = await User.find({
+            status: "active",
+        }).select("-password");
         res.json(users);
     } catch (error) {
         console.error("Error getting users:", error);
@@ -13,7 +15,10 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select("-password");
+        const user = await User.findOne({
+            _id: req.params.id,
+            status: "active",
+        }).select("-password");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -28,7 +33,7 @@ exports.updateUser = async (req, res) => {
     try {
         const { email, full_name, phone } = req.body;
         const userId = req.user._id;
-        const user = await User.findByIdAndUpdate(userId, { email, full_name, phone }, { new: true, runValidators: true }).select("-password");
+        const user = await User.findOneAndUpdate({ _id: userId, status: "active" }, { email, full_name, phone }, { new: true, runValidators: true }).select("-password");
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -59,7 +64,7 @@ exports.changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
         const userId = req.user._id;
-        const user = await User.findById(userId);
+        const user = await User.findOne({ _id: userId, status: "active" });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -84,7 +89,7 @@ exports.changePassword = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
     try {
         const userId = req.user._id;
-        const user = await User.findById(userId).select("-password");
+        const user = await User.findOne({ _id: userId, status: "active" }).select("-password");
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -94,5 +99,21 @@ exports.getUserProfile = async (req, res) => {
     } catch (error) {
         console.error("Error getting user profile:", error);
         res.status(500).json({ message: "Error retrieving user profile" });
+    }
+};
+
+exports.updateUserPUT = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findByIdAndUpdate(userId, req.body, { new: true, runValidators: true }).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({ message: "User updated successfully", user });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Error updating user" });
     }
 };

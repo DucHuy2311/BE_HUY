@@ -10,6 +10,7 @@ class AuthController {
             // Kiểm tra xem username hoặc email đã tồn tại chưa
             const existingUser = await User.findOne({
                 $or: [{ username }, { email }],
+                status: "active",
             });
 
             if (existingUser) {
@@ -48,11 +49,12 @@ class AuthController {
 
     static async login(req, res) {
         try {
-            const { email, username, password } = req.body;
+            const { email, password } = req.body;
 
             // Tìm user bằng username hoặc email
             const user = await User.findOne({
-                $or: [{ username }, { email }],
+                email,
+                status: "active",
             });
 
             if (!user) {
