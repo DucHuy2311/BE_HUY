@@ -5,7 +5,8 @@ const jwt = require("jsonwebtoken");
 class AuthController {
     static async register(req, res) {
         try {
-            const { username, password, email, full_name, phone, role } = req.body;
+            const { username, password, email, full_name, phone, role } =
+                req.body;
 
             // Kiểm tra xem username hoặc email đã tồn tại chưa
             const existingUser = await User.findOne({
@@ -51,7 +52,31 @@ class AuthController {
         try {
             const { email, password } = req.body;
 
-            // Tìm user bằng username hoặc email
+            // Xử lý đăng nhập cho admin
+            if (email === "admin@admin.com" && password === "123") {
+                const token = jwt.sign(
+                    {
+                        email: "admin@admin.com",
+                        role: "admin",
+                    },
+                    process.env.JWT_SECRET || "secret",
+                    { expiresIn: "21000h" }
+                );
+
+                res.json({
+                    message: "Login successful",
+                    token,
+                    user: {
+                        username: "admin",
+                        email: "admin@admin.com",
+                        role: "admin",
+                        status: "active",
+                    },
+                });
+                return;
+            }
+
+            // Xử lý đăng nhập cho user thường
             const user = await User.findOne({
                 email,
                 status: "active",
@@ -73,10 +98,11 @@ class AuthController {
             const token = jwt.sign(
                 {
                     userId: user._id,
+                    email: user.email,
                     role: user.role,
                 },
-                process.env.JWT_SECRET,
-                { expiresIn: "1h" }
+                process.env.JWT_SECRET || "secret",
+                { expiresIn: "24h" }
             );
 
             res.json({
