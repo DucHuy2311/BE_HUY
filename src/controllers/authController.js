@@ -52,72 +52,35 @@ class AuthController {
         try {
             const { email, password } = req.body;
 
-            // Xử lý đăng nhập cho admin
+            // Kiểm tra thông tin đăng nhập
             if (email === "admin@admin.com" && password === "123") {
+                // Tạo token
                 const token = jwt.sign(
-                    {
-                        email: "admin@admin.com",
-                        role: "admin",
-                    },
-                    process.env.JWT_SECRET || "secret",
-                    { expiresIn: "21000h" }
+                    { email, role: "admin" },
+                    process.env.JWT_SECRET || "your-secret-key",
+                    { expiresIn: "1d" }
                 );
 
-                res.json({
-                    message: "Login successful",
-                    token,
-                    user: {
-                        username: "admin",
-                        email: "admin@admin.com",
-                        role: "admin",
-                        status: "active",
+                res.status(200).json({
+                    success: true,
+                    data: {
+                        token,
+                        user: {
+                            email,
+                            role: "admin",
+                        },
                     },
                 });
-                return;
+            } else {
+                res.status(401).json({
+                    success: false,
+                    message: "Email hoặc mật khẩu không đúng",
+                });
             }
-
-            // Xử lý đăng nhập cho user thường
-            const user = await User.findOne({
-                email,
-                status: "active",
-            });
-
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(401).json({ message: "Invalid credentials" });
-            }
-
-            // Cập nhật last_login
-            user.last_login = new Date();
-            await user.save();
-
-            const token = jwt.sign(
-                {
-                    userId: user._id,
-                    email: user.email,
-                    role: user.role,
-                },
-                process.env.JWT_SECRET || "secret",
-                { expiresIn: "24h" }
-            );
-
-            res.json({
-                message: "Login successful",
-                token,
-                user: {
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    role: user.role,
-                },
-            });
         } catch (error) {
             res.status(500).json({
-                message: "Error logging in",
+                success: false,
+                message: "Lỗi khi đăng nhập",
                 error: error.message,
             });
         }

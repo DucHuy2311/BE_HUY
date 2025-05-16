@@ -5,7 +5,7 @@ const reservationSchema = new mongoose.Schema(
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: false,
         },
         table_id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -36,7 +36,14 @@ const reservationSchema = new mongoose.Schema(
         status: {
             type: String,
             default: "pending",
-            enum: ["pending", "confirmed", "deposit_paid", "completed", "cancelled", "no_show"],
+            enum: [
+                "pending",
+                "confirmed",
+                "deposit_paid",
+                "completed",
+                "cancelled",
+                "no_show",
+            ],
         },
         special_requests: {
             type: String,

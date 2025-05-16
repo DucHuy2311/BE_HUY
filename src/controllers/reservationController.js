@@ -4,21 +4,50 @@ const Payment = require("../models/paymentModel");
 const User = require("../models/userModel");
 
 class ReservationController {
+    static async getReservationById(req, res) {
+        try {
+            const reservation = await Reservation.findById(req.params.id);
+
+            if (!reservation) {
+                return res
+                    .status(404)
+                    .json({ message: "Reservation not found" });
+            }
+
+            res.json(reservation);
+        } catch (error) {
+            res.status(500).json({
+                message: "Error fetching reservation",
+                error: error.message,
+            });
+            throw new Error(error);
+        }
+    }
     static async createReservation(req, res) {
         try {
-            const { table_id, reservation_time, duration, number_of_guests, deposit_required, special_requests, menu_items } = req.body;
+            const {
+                table_id,
+                reservation_time,
+                duration,
+                number_of_guests,
+                deposit_required,
+                special_requests,
+                menu_items,
+            } = req.body;
+            console.log("req.body", req.body);
 
-            const user_id = req.user._id;
+            // const user_id = req.user._id;
 
             // Kiểm tra bàn có sẵn sàng không
-            const table = await Table.findById(table_id);
+            const table = await Table.findOne({ _id: table_id });
+            console.log("table", table);
             if (!table || table.status !== "available") {
                 return res.status(400).json({ message: "Table not available" });
             }
 
             // Tạo reservation mới
             const reservation = new Reservation({
-                user_id,
+                // user_id,
                 table_id,
                 reservation_time,
                 duration,
@@ -47,7 +76,10 @@ class ReservationController {
 
     static async getReservations(req, res) {
         try {
-            const reservations = await Reservation.find().populate("user_id", "-password").populate("table_id").populate("menu_items.item_id");
+            const reservations = await Reservation.find()
+                .populate("user_id", "-password")
+                .populate("table_id")
+                .populate("menu_items.item_id");
             res.json(reservations);
         } catch (error) {
             res.status(500).json({
@@ -59,10 +91,15 @@ class ReservationController {
 
     static async getReservationById(req, res) {
         try {
-            const reservation = await Reservation.findById(req.params.id).populate("user_id", "-password").populate("table_id").populate("menu_items.item_id");
+            const reservation = await Reservation.findById(req.params.id)
+                .populate("user_id", "-password")
+                .populate("table_id")
+                .populate("menu_items.item_id");
 
             if (!reservation) {
-                return res.status(404).json({ message: "Reservation not found" });
+                return res
+                    .status(404)
+                    .json({ message: "Reservation not found" });
             }
 
             res.json(reservation);
@@ -76,20 +113,28 @@ class ReservationController {
 
     static async updateReservationStatus(req, res) {
         try {
-            if (req.user.role !== "admin") {
-                return res.status(403).json({ message: "Access denied" });
-            }
+            // if (req.user.role !== "admin") {
+            //     return res.status(403).json({ message: "Access denied" });
+            // }
 
             const { status } = req.body;
-            const reservation = await Reservation.findByIdAndUpdate(req.params.id, { status }, { new: true, runValidators: true }).populate("user_id", "-password").populate("table_id");
+            const reservation = await Reservation.findByIdAndUpdate(
+                req.params.id,
+                { status },
+                { new: true, runValidators: true }
+            );
 
             if (!reservation) {
-                return res.status(404).json({ message: "Reservation not found" });
+                return res
+                    .status(404)
+                    .json({ message: "Reservation not found" });
             }
 
             // Nếu reservation bị hủy, cập nhật trạng thái bàn
             if (status === "cancelled" || status === "no_show") {
-                await Table.findByIdAndUpdate(reservation.table_id, { status: "available" });
+                await Table.findByIdAndUpdate(reservation.table_id, {
+                    status: "available",
+                });
             }
 
             res.json({
@@ -110,10 +155,14 @@ class ReservationController {
                 return res.status(403).json({ message: "Access denied" });
             }
 
-            const reservation = await Reservation.findById(req.params.id).populate("user_id", "-password").populate("table_id");
+            const reservation = await Reservation.findById(req.params.id)
+                .populate("user_id", "-password")
+                .populate("table_id");
 
             if (!reservation) {
-                return res.status(404).json({ message: "Reservation not found" });
+                return res
+                    .status(404)
+                    .json({ message: "Reservation not found" });
             }
 
             // Cập nhật trạng thái reservation
@@ -121,10 +170,14 @@ class ReservationController {
             await reservation.save();
 
             // Cập nhật trạng thái bàn
-            await Table.findByIdAndUpdate(reservation.table_id, { status: "available" });
+            await Table.findByIdAndUpdate(reservation.table_id, {
+                status: "available",
+            });
 
             // Tìm và cập nhật payment nếu có
-            const payment = await Payment.findOne({ reservation_id: reservation._id });
+            const payment = await Payment.findOne({
+                reservation_id: reservation._id,
+            });
             if (payment) {
                 payment.payment_status = "refunded";
                 await payment.save();
@@ -164,10 +217,14 @@ class ReservationController {
                 await reservation.save();
 
                 // Cập nhật trạng thái bàn
-                await Table.findByIdAndUpdate(reservation.table_id, { status: "available" });
+                await Table.findByIdAndUpdate(reservation.table_id, {
+                    status: "available",
+                });
 
                 // Tìm và cập nhật payment nếu có
-                const payment = await Payment.findOne({ reservation_id: reservation._id });
+                const payment = await Payment.findOne({
+                    reservation_id: reservation._id,
+                });
                 if (payment) {
                     payment.payment_status = "refunded";
                     await payment.save();
