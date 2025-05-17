@@ -6,7 +6,11 @@ const User = require("../models/userModel");
 class ReservationController {
     static async getReservationById(req, res) {
         try {
-            const reservation = await Reservation.findById(req.params.id);
+            const reservation = await Reservation.findById(req.params.id)
+                .populate("table_id")
+                .populate("menu_items.item_id");
+
+            console.log("reservation với id ", req.params.id, reservation);
 
             if (!reservation) {
                 return res
@@ -23,6 +27,7 @@ class ReservationController {
             throw new Error(error);
         }
     }
+
     static async createReservation(req, res) {
         try {
             const {
@@ -33,10 +38,12 @@ class ReservationController {
                 deposit_required,
                 special_requests,
                 menu_items,
+                user_name,
+                user_phone,
             } = req.body;
             console.log("req.body", req.body);
 
-            // const user_id = req.user._id;
+            const user_id = req?.user?._id || null;
 
             // Kiểm tra bàn có sẵn sàng không
             const table = await Table.findOne({ _id: table_id });
@@ -46,8 +53,9 @@ class ReservationController {
             }
 
             // Tạo reservation mới
+
             const reservation = new Reservation({
-                // user_id,
+                user_id,
                 table_id,
                 reservation_time,
                 duration,
@@ -55,6 +63,8 @@ class ReservationController {
                 deposit_required,
                 special_requests,
                 menu_items,
+                user_name,
+                user_phone,
             });
 
             await reservation.save();
@@ -67,6 +77,7 @@ class ReservationController {
                 reservation,
             });
         } catch (error) {
+            console.log("error", error);
             res.status(500).json({
                 message: "Error creating reservation",
                 error: error.message,
@@ -77,9 +88,9 @@ class ReservationController {
     static async getReservations(req, res) {
         try {
             const reservations = await Reservation.find()
-                .populate("user_id", "-password")
                 .populate("table_id")
                 .populate("menu_items.item_id");
+            console.log("reservations", reservations);
             res.json(reservations);
         } catch (error) {
             res.status(500).json({
@@ -89,34 +100,29 @@ class ReservationController {
         }
     }
 
-    static async getReservationById(req, res) {
-        try {
-            const reservation = await Reservation.findById(req.params.id)
-                .populate("user_id", "-password")
-                .populate("table_id")
-                .populate("menu_items.item_id");
+    // static async getReservationById(req, res) {
+    //     try {
+    //         const reservation = await Reservation.findById(req.params.id)
+    //             .populate("table_id")
+    //             .populate("menu_items.item_id");
 
-            if (!reservation) {
-                return res
-                    .status(404)
-                    .json({ message: "Reservation not found" });
-            }
+    //         if (!reservation) {
+    //             return res
+    //                 .status(404)
+    //                 .json({ message: "Reservation not found" });
+    //         }
 
-            res.json(reservation);
-        } catch (error) {
-            res.status(500).json({
-                message: "Error fetching reservation",
-                error: error.message,
-            });
-        }
-    }
+    //         res.json(reservation);
+    //     } catch (error) {
+    //         res.status(500).json({
+    //             message: "Error fetching reservation",
+    //             error: error.message,
+    //         });
+    //     }
+    // }
 
     static async updateReservationStatus(req, res) {
         try {
-            // if (req.user.role !== "admin") {
-            //     return res.status(403).json({ message: "Access denied" });
-            // }
-
             const { status } = req.body;
             const reservation = await Reservation.findByIdAndUpdate(
                 req.params.id,

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/database");
+const morgan = require("morgan");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -9,23 +10,18 @@ const reservationRoutes = require("./routes/reservationRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 const tableRoutes = require("./routes/tableRoutes");
-
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const app = express();
 
 // Connect to MongoDB
 connectDB();
 
 // Middleware
-
+app.use(morgan("dev"));
 app.use(express.json());
+
 app.use(cors());
 app.use(express.static("public"));
-app.use((req, res, next) => {
-    console.log(
-        `[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`
-    );
-    next();
-});
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -34,6 +30,7 @@ app.use("/api/reservations", reservationRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/tables", tableRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
