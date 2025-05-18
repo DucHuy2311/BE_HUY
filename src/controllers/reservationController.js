@@ -31,7 +31,7 @@ class ReservationController {
     static async createReservation(req, res) {
         try {
             const {
-                table_id,
+                tableId,
                 reservation_time,
                 duration,
                 number_of_guests,
@@ -46,7 +46,7 @@ class ReservationController {
             const user_id = req?.user?._id || null;
 
             // Kiểm tra bàn có sẵn sàng không
-            const table = await Table.findOne({ _id: table_id });
+            const table = await Table.findOne({ _id: tableId });
             console.log("table", table);
             if (!table || table.status !== "available") {
                 return res.status(400).json({ message: "Table not available" });
@@ -56,7 +56,7 @@ class ReservationController {
 
             const reservation = new Reservation({
                 user_id,
-                table_id,
+                table_id: tableId,
                 reservation_time,
                 duration,
                 number_of_guests,
@@ -70,7 +70,7 @@ class ReservationController {
             await reservation.save();
 
             // Cập nhật trạng thái bàn
-            await Table.findByIdAndUpdate(table_id, { status: "reserved" });
+            await Table.findByIdAndUpdate(tableId, { status: "reserved" });
 
             res.status(201).json({
                 message: "Reservation created successfully",

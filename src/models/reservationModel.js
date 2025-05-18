@@ -18,29 +18,29 @@ const reservationSchema = new mongoose.Schema(
         table_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Table",
-            required: true,
+            required: false,
         },
         reservation_time: {
             type: Date,
-            required: true,
+            required: false,
         },
         duration: {
             type: Number,
-            required: true,
+            required: false,
             min: 30,
             max: 240,
         },
         number_of_guests: {
             // Số lượng khách
             type: Number,
-            required: true,
+            required: false,
             min: 1,
             max: 20,
         },
         deposit_required: {
             // Số tiền cọc
             type: Number,
-            required: true,
+            required: false,
             min: 0,
         },
         status: {

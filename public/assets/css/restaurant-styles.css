@@ -252,13 +252,21 @@ textarea {
   padding: 16px;
 }
 
+.form-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
 .modal-content {
   background-color: var(--eerie-black-2);
   border-radius: 8px;
-  width: 100%;
+  /* width: 100%; */
   max-width: 800px;
   max-height: 90vh;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .payment-content {
@@ -365,6 +373,33 @@ textarea {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--gold-crayola);
+}
+
+.form-group select {
+  width: 100%;
+  background-color: var(--eerie-black-3);
+  border: 1px solid var(--white-alpha-10);
+  color: var(--white);
+  padding: 12px 16px;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.form-group select:focus {
+  border-color: var(--gold-crayola);
+  outline: none;
+}
+
+.form-group select option {
+  background-color: var(--eerie-black-2);
+  color: var(--white);
+  padding: 12px;
 }
 
 /* Deposit Info */
@@ -520,7 +555,8 @@ textarea {
 }
 
 .search-bar .form-group {
-  flex: 1 1 25%; /* Date và Time mỗi cái chiếm 25% */
+  flex: 1 1 25%;
+  /* Date và Time mỗi cái chiếm 25% */
   min-width: 150px;
   display: flex;
   flex-direction: column;
@@ -533,10 +569,12 @@ textarea {
 }
 
 .search-bar button {
-  flex: 1 1 50%; /* Nút chiếm 50% */
+  flex: 1 1 50%;
+  /* Nút chiếm 50% */
   padding: 1rem;
   font-size: 1rem;
   font-weight: bold;
   height: fit-content;
   align-self: flex-end;
 }
+

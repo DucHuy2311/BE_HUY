@@ -7,7 +7,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 router.post("/", authMiddleware, MenuController.createMenuItem);
 
 // Lấy danh sách menu
-router.get("/", authMiddleware, MenuController.getMenuItems);
+router.get("/", MenuController.getMenuItems);
 
 router.get("/:id", MenuController.getMenuItem);
 

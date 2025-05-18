@@ -39,77 +39,14 @@
         <p class="section-subtitle">Select Your Table</p>
         <h2 class="section-title">Restaurant Floor Plan</h2>
 
-        <div class="search-bar">
-          <div class="form-group">
-            <label for="search-date">Date</label>
-            <input type="date" id="search-date" required />
-          </div>
-          <div class="form-group">
-            <label for="search-time">Time</label>
-            <input type="time" id="search-time" required />
-          </div>
-          <button id="searchTablesBtn" class="submit-btn">
-            Search Empty Tabels
-          </button>
-        </div>
-
-        <div class="restaurant-map">
-          <div class="floor-tabs">
-            <div class="tabs-list" id="floorTabs">
-              <button class="tab-btn active" data-floor="1">
-                Ground Floor
-              </button>
-              <button class="tab-btn" data-floor="2">First Floor</button>
-              <button class="tab-btn" data-floor="3">Second Floor</button>
-              <button class="tab-btn" data-floor="4">Third Floor</button>
-            </div>
-
-            <div class="tabs-content">
-              <div class="tab-content active" id="floor-1">
-                <div class="floor-info">
-                  <h3 class="floor-title">Ground Floor - Select a Table</h3>
-                  <p class="floor-description">
-                    Click on a table to make a reservation
-                  </p>
-                </div>
-                <div class="table-grid" id="tables-floor-1"></div>
-              </div>
-              <div class="tab-content" id="floor-2">
-                <div class="floor-info">
-                  <h3 class="floor-title">First Floor - Select a Table</h3>
-                  <p class="floor-description">
-                    Click on a table to make a reservation
-                  </p>
-                </div>
-                <div class="table-grid" id="tables-floor-2"></div>
-              </div>
-              <div class="tab-content" id="floor-3">
-                <div class="floor-info">
-                  <h3 class="floor-title">Second Floor - Select a Table</h3>
-                  <p class="floor-description">
-                    Click on a table to make a reservation
-                  </p>
-                </div>
-                <div class="table-grid" id="tables-floor-3"></div>
-              </div>
-              <div class="tab-content" id="floor-4">
-                <div class="floor-info">
-                  <h3 class="floor-title">Third Floor - Select a Table</h3>
-                  <p class="floor-description">
-                    Click on a table to make a reservation
-                  </p>
-                </div>
-                <div class="table-grid" id="tables-floor-4"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="table-grid"></div>
       </div>
     </section>
   </main>
 
   <!-- Reservation Form Modal -->
-  <div class="modal" id="reservationModal">
+  <div class="form-modal">
+
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Reservation Details</h2>
@@ -118,12 +55,21 @@
       <div class="modal-body">
         <div class="table-info" id="tableInfo">
           <!-- Table info will be inserted here -->
+
         </div>
 
         <form id="reservationForm">
           <div class="form-grid">
             <div class="form-group">
-              <label for="name">Full Name</label>
+              <label for="table">Chọn Bàn</label>
+              <select id="table" name="table" required>
+                <option value="">-- Chọn bàn --</option>
+                <!-- Table options will be inserted here -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="name">Họ và tên</label>
               <input type="text" id="name" name="name" required />
             </div>
 
@@ -150,6 +96,10 @@
             <div class="form-group">
               <label for="time">Time</label>
               <input type="time" id="time" name="time" required />
+            </div>
+            <div class="form-group">
+              <label for="duration">Thời gian đặt bàn</label>
+              <input type="number" id="duration" name="reservation_time" min="1" required />
             </div>
           </div>
 
@@ -212,7 +162,7 @@
     </div>
   </div>
 
-  <script src="/assets/js/restaurant-script.js"></script>
+  <script src="./assets/js/restaurant-script.js"></script>
 </body>
 
 </html>
