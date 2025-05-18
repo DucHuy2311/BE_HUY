@@ -16,12 +16,12 @@ const tableSchema = new mongoose.Schema(
         status: {
             type: String,
             default: "available",
-            enum: ["available", "occupied", "reserved", "maintenance"],
+            enum: ["available", "occupied", "reserved", "maintenance"], // available: trống, occupied: đã đặt, reserved: đã đặt, maintenance: đang sửa chữa
         },
         location: {
             type: String,
             required: true,
-            enum: ["indoor", "outdoor", "vip_room"],
+            enum: ["indoor", "outdoor", "vip_room"], // indoor: nội thất, outdoor: ngoại thất, vip_room: phòng vip
         },
         description: {
             type: String,
@@ -30,7 +30,12 @@ const tableSchema = new mongoose.Schema(
         features: [
             {
                 type: String,
-                enum: ["window_view", "private_room", "smoking_area", "wheelchair_accessible"],
+                enum: [
+                    "window_view",
+                    "private_room",
+                    "smoking_area",
+                    "wheelchair_accessible",
+                ],
             },
         ],
     },

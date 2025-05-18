@@ -3,6 +3,8 @@ const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/database");
 const morgan = require("morgan");
+const multer = require("multer");
+const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -21,7 +23,21 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use(cors());
+// public là thư mục chứa các file static
 app.use(express.static("public"));
+
+// Multer config cho upload ảnh
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "public/uploads/");
+    },
+    filename: function (req, file, cb) {
+        console.log("file", file);
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({ storage });
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -31,6 +47,17 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/tables", tableRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+// API upload ảnh
+app.post("/api/upload", upload.single("image"), (req, res) => {
+    console.log("body", req.body);
+    console.log("req.file", req.file);
+    if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+    }
+    // Trả về đường dẫn ảnh
+    res.json({ imageUrl: `/uploads/${req.file.filename}` });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

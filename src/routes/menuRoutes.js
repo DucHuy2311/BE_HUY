@@ -9,13 +9,13 @@ router.post("/", authMiddleware, MenuController.createMenuItem);
 // Lấy danh sách menu
 router.get("/", authMiddleware, MenuController.getMenuItems);
 
-router.get("/:id", authMiddleware, MenuController.getMenuItem);
+router.get("/:id", MenuController.getMenuItem);
 
 // Cập nhật menu
 router.put("/:menuId", authMiddleware, MenuController.updateMenuItem);
 
 // Xóa menu
-router.delete("/:menuId", authMiddleware, MenuController.deleteMenuItem);
+router.delete("/:id", authMiddleware, MenuController.deleteMenuItem);
 
 router.post("/:id/status", authMiddleware, MenuController.updateStatus);
 

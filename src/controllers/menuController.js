@@ -137,6 +137,7 @@ class MenuController {
     }
 
     static async deleteMenuItem(req, res) {
+        console.log("delete menu item");
         try {
             // if (req.user.role !== "admin") {
             //     return res.status(403).json({ message: "Access denied" });
