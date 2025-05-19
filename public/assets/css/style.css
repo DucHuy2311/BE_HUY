@@ -31,14 +31,18 @@
 
   /* gradient color */
 
-  --loading-text-gradient: linear-gradient(90deg,
-      transparent 0% 16.66%,
-      var(--smoky-black-3) 33.33% 50%,
-      transparent 66.66% 75%);
-  --gradient-1: linear-gradient(to top,
-      hsla(0, 0%, 0%, 0.9),
-      hsla(0, 0%, 0%, 0.7),
-      transparent);
+  --loading-text-gradient: linear-gradient(
+    90deg,
+    transparent 0% 16.66%,
+    var(--smoky-black-3) 33.33% 50%,
+    transparent 66.66% 75%
+  );
+  --gradient-1: linear-gradient(
+    to top,
+    hsla(0, 0%, 0%, 0.9),
+    hsla(0, 0%, 0%, 0.7),
+    transparent
+  );
 
   /* typography */
 
@@ -447,6 +451,17 @@ body .nav-active {
   gap: 40px;
 }
 
+.grid-menu {
+  display: grid;
+  gap: 40px;
+}
+
+.grid-menu img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
 .hover\:shine {
   position: relative;
 }
@@ -588,11 +603,11 @@ body .nav-active {
   transition: var(--transition-2);
 }
 
-.preload>* {
+.preload > * {
   transition: var(--transition-1);
 }
 
-.preload.loaded>* {
+.preload.loaded > * {
   opacity: 0;
 }
 
@@ -1100,7 +1115,7 @@ body .nav-active {
   margin-block-end: 120px;
 }
 
-.about-banner>.w-100 {
+.about-banner > .w-100 {
   padding-inline-start: 50px;
 }
 
@@ -1715,7 +1730,7 @@ textarea.input-field {
     gap: 80px;
   }
 
-  .about-banner>.w-100 {
+  .about-banner > .w-100 {
     padding-inline-start: 90px;
   }
 
@@ -1734,7 +1749,7 @@ textarea.input-field {
   }
 
   /* footer */
-  .footer-brand>* {
+  .footer-brand > * {
     max-width: 460px;
     margin-inline: auto;
   }
@@ -1837,7 +1852,6 @@ textarea.input-field {
 /* responsive for large than 992px screen */
 
 @media (min-width: 992px) {
-
   /* custom property */
   :root {
     /* spacing */
@@ -1971,7 +1985,6 @@ textarea.input-field {
 /* responsive for large than 1200px screen */
 
 @media (min-width: 1200px) {
-
   /* custom property */
   :root {
     --fontSize-title-2: 2.5rem;
@@ -1997,7 +2010,7 @@ textarea.input-field {
   /* header */
 
   .nav-open-btn,
-  .navbar>*:not(.navbar-list),
+  .navbar > *:not(.navbar-list),
   .header .overlay {
     display: none;
   }
